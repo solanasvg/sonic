@@ -1,0 +1,220 @@
+<html><head><base href="https://example.com/">
+<style>
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+    transition: background-color 0.5s;
+}
+
+#sega-logo {
+    font-size: 72px;
+    font-weight: bold;
+    color: #0070C0;
+    letter-spacing: 10px;
+    text-shadow: 0 0 10px #00A0FF;
+    opacity: 0;
+    transition: opacity 1s ease-in-out, color 0.3s;
+}
+
+#glitch-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    opacity: 0;
+    z-index: 10;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+#content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+    z-index: 20;
+}
+
+#sonic-svg {
+    width: 300px;
+    height: auto;
+    filter: drop-shadow(0 0 8px rgba(255,0,0,0.5));
+}
+
+#message {
+    color: #FF0000;
+    font-size: 24px;
+    margin-top: 20px;
+    text-shadow: 2px 2px 4px rgba(255,0,0,0.7);
+    letter-spacing: 2px;
+}
+
+@keyframes fingerWaggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+}
+
+#finger {
+    animation: fingerWaggle 0.4s infinite;
+    transform-origin: bottom center;
+}
+
+@keyframes subtle-shake {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(2px, 2px) rotate(1deg); }
+    50% { transform: translate(-2px, -2px) rotate(-1deg); }
+    75% { transform: translate(-2px, 2px) rotate(1deg); }
+}
+
+#sonic-svg {
+    animation: subtle-shake 0.4s infinite;
+}
+
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-7px, 7px) skew(2deg); }
+    40% { transform: translate(-7px, -7px) skew(-2deg); }
+    60% { transform: translate(7px, 7px) skew(2deg); }
+    80% { transform: translate(7px, -7px) skew(-2deg); }
+    100% { transform: translate(0); }
+}
+
+.glitch {
+    animation: glitch 0.15s infinite;
+}
+
+@keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+#content {
+    animation: flicker 0.1s infinite;
+}
+</style>
+</head>
+<body>
+<div id="sega-logo">SEGA</div>
+<div id="glitch-overlay"></div>
+<div id="content">
+    <svg id="sonic-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <!-- Faker's body -->
+        <ellipse cx="50" cy="55" rx="30" ry="35" fill="#0044CC"/>
+        
+        <!-- Faker's head -->
+        <circle cx="50" cy="30" r="25" fill="#0044CC"/>
+        
+        <!-- Faker's eyes (white with red pupils) -->
+        <circle cx="40" cy="25" r="8" fill="#FFFFFF"/>
+        <circle cx="60" cy="25" r="8" fill="#FFFFFF"/>
+        <circle cx="40" cy="25" r="4" fill="#FF0000"/>
+        <circle cx="60" cy="25" r="4" fill="#FF0000"/>
+        
+        <!-- Faker's nose -->
+        <ellipse cx="50" cy="35" rx="5" ry="3" fill="#FF6666"/>
+        
+        <!-- Faker's mouth (now a sinister grin) -->
+        <path d="M40 40 Q50 48 60 40" fill="none" stroke="#000000" stroke-width="2"/>
+        <path d="M43 44 L47 42 M53 42 L57 44" fill="none" stroke="#000000" stroke-width="1"/>
+        
+        <!-- Faker's left arm (down) -->
+        <path d="M20 60 Q15 70 20 80" fill="none" stroke="#0044CC" stroke-width="10" stroke-linecap="round"/>
+        
+        <!-- Faker's right arm (up with finger) -->
+        <path d="M80 60 Q85 40 80 20" fill="none" stroke="#0044CC" stroke-width="10" stroke-linecap="round"/>
+        <g id="finger">
+            <path d="M80 20 L80 8" fill="none" stroke="#0044CC" stroke-width="5" stroke-linecap="round"/>
+        </g>
+        
+        <!-- Faker's legs -->
+        <path d="M35 90 Q40 100 50 95" fill="none" stroke="#0044CC" stroke-width="10" stroke-linecap="round"/>
+        <path d="M65 90 Q60 100 50 95" fill="none" stroke="#0044CC" stroke-width="10" stroke-linecap="round"/>
+        
+        <!-- Faker's shoes -->
+        <rect x="30" y="95" width="15" height="10" fill="#990000" rx="5"/>
+        <rect x="55" y="95" width="15" height="10" fill="#990000" rx="5"/>
+    </svg>
+    <div id="message">I'm the REAL Sonic! 58 seconds left... Tick tock!</div>
+</div>
+
+<script>
+// Show SEGA logo
+setTimeout(() => {
+    document.getElementById('sega-logo').style.opacity = 1;
+}, 1000);
+
+// Glitch effect
+function glitchEffect() {
+    const glitchOverlay = document.getElementById('glitch-overlay');
+    const segaLogo = document.getElementById('sega-logo');
+    const body = document.body;
+    
+    let glitchCount = 0;
+    const maxGlitches = 7;
+    
+    function singleGlitch() {
+        glitchOverlay.style.opacity = 1;
+        body.style.backgroundColor = 'black';
+        segaLogo.classList.add('glitch');
+        segaLogo.style.color = '#FF0000';
+        
+        setTimeout(() => {
+            glitchOverlay.style.opacity = 0;
+            segaLogo.classList.remove('glitch');
+            segaLogo.style.color = '#0070C0';
+            
+            glitchCount++;
+            if (glitchCount < maxGlitches) {
+                setTimeout(singleGlitch, Math.random() * 250 + 50);
+            } else {
+                // After glitches, keep background black and show the faker
+                body.style.backgroundColor = 'black';
+                segaLogo.style.opacity = 0;
+                setTimeout(() => {
+                    document.getElementById('content').style.opacity = 1;
+                }, 800);
+            }
+        }, 80);
+    }
+    
+    singleGlitch();
+}
+
+// Start the sequence
+setTimeout(glitchEffect, 3000);
+
+// Hide everything after 10 seconds
+setTimeout(() => {
+    document.getElementById('content').style.opacity = 0;
+    document.getElementById('sega-logo').style.opacity = 0;
+}, 13000);
+
+// Update countdown
+let seconds = 58;
+const messageEl = document.getElementById('message');
+const countdownInterval = setInterval(() => {
+    seconds--;
+    if (seconds > 0) {
+        messageEl.textContent = `I'm the REAL Sonic! ${seconds} seconds left... Tick tock!`;
+    } else {
+        messageEl.textContent = "Time's up! Here I come!";
+        clearInterval(countdownInterval);
+    }
+}, 1000);
+</script>
+
+</body>
+</html>
